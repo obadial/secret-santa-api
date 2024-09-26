@@ -31,3 +31,6 @@ format:
 	docker build -f $(root)/tools/black-linter/Dockerfile -t black-format $(root)/. 1> /dev/null
 	docker run --rm -v $(root):/black-folder black-format .
 
+test:
+	PYTHONPATH=. poetry run pytest
+

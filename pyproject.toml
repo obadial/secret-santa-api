@@ -15,9 +15,30 @@ uvicorn = "^0.18.0"
 [tool.poetry.dev-dependencies]
 pytest = "^6.2.4"
 httpx = "^0.19.0"
+black = "^23.0.0"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
+
+# Configuration de Black
+[tool.black]
+line-length = 90
+target-version = ['py39']
+skip-string-normalization = false 
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.git
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+)/
+'''
+
 
 

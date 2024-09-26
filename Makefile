@@ -21,3 +21,6 @@ docker-clean:
 
 docker-logs:
 	docker logs -f $(DOCKER_CONTAINER_NAME)
+
+reload-api: docker-stop docker-build docker-run
+	@echo "API reloaded successfully."

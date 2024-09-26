@@ -1,4 +1,4 @@
-name: Lint Code with Black
+name: Run Linter
 
 on:
   push:

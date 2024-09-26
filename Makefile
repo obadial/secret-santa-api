@@ -1,6 +1,7 @@
 DOCKER_IMAGE_NAME=secret-santa-api
 DOCKER_CONTAINER_NAME=secret-santa-api-container
 PORT=8000
+root:=$(PWD)
 
 docker-build:
 	docker build -t $(DOCKER_IMAGE_NAME) .
@@ -25,4 +26,8 @@ docker-logs:
 
 reload-api: docker-stop docker-build docker-run
 	@echo "API reloaded successfully."
+
+format:
+	docker build -f $(root)/tools/black-linter/Dockerfile -t black-format $(root)/. 1> /dev/null
+	docker run --rm -v $(root):/black-folder black-format .
 

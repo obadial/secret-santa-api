@@ -32,7 +32,7 @@ This endpoint allows you to create a new participant in the default Secret Santa
 
 ```bash
 curl -X 'POST' \
-  'http://127.0.0.1:8000/v1/participants' \
+  'http://127.0.0.1:8000/v1/participants/' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{"name":"John Doe"}'
@@ -51,7 +51,8 @@ curl -X 'POST' \
 ```json
 {
   "id": 1,
-  "name": "John Doe"
+  "name": "John Doe",
+  "list_id": 1,
 }
 ```
 
@@ -63,7 +64,7 @@ This endpoint retrieves a list of all participants currently registered in the d
 
 ```bash
 curl -X 'GET' \
-  'http://127.0.0.1:8000/v1/participants' \
+  'http://127.0.0.1:8000/v1/participants/' \
   -H 'accept: application/json'
 ```
 
@@ -73,11 +74,13 @@ curl -X 'GET' \
 [
   {
     "id": 1,
-    "name": "John Doe"
+    "name": "John Doe",
+    "list_id": 1,
   },
   {
     "id": 2,
-    "name": "Jane Smith"
+    "name": "Jane Smith",
+    "list_id": 1,
   }
 ]
 ```
@@ -90,20 +93,13 @@ This endpoint allows one participant to blacklist another participant in the def
 
 ```bash
 curl -X 'POST' \
-  'http://127.0.0.1:8000/v1/blacklist' \
+  'http://127.0.0.1:8000/v1/blacklist/' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{"participant_id": 1, "blacklisted_participant_id": 2}'
 ```
 
-**Request Body:**
 
-```json
-{
-  "participant_id": 1,
-  "blacklisted_participant_id": 2
-}
-```
 
 **Response:**
 
@@ -111,7 +107,8 @@ curl -X 'POST' \
 {
   "id": 1,
   "participant_id": 1,
-  "blacklisted_participant_id": 2
+  "blacklisted_participant_id": 2,
+  "list_id": 1,
 }
 ```
 
@@ -123,7 +120,7 @@ This endpoint generates a valid Secret Santa draw for the default list, ensuring
 
 ```bash
 curl -X 'GET' \
-  'http://127.0.0.1:8000/v1/draw' \
+  'http://127.0.0.1:8000/v1/draw/' \
   -H 'accept: application/json'
 ```
 
@@ -148,32 +145,16 @@ curl -X 'GET' \
 
 ### 5. **POST /v1/lists**
 
-Create a new Secret Santa list. If no name is provided, one will be generated automatically using a Star Wars planet name.
+Create a new Secret Santa list. One will be generated automatically using a Star Wars planet name.
 
 **Example without name:**
 
 ```bash
 curl -X 'POST' \
-  'http://127.0.0.1:8000/v1/lists' \
+  'http://127.0.0.1:8000/v1/lists/' \
   -H 'accept: application/json'
 ```
 
-**Example with a name provided:**
-
-```bash
-curl -X 'POST' \
-  'http://127.0.0.1:8000/v1/lists?name=Holiday%202024' \
-  -H 'accept: application/json'
-```
-
-**Response:**
-
-```json
-{
-  "id": 1,
-  "name": "Holiday 2024"
-}
-```
 
 ### 6. **POST /v1/lists/{list_id}/participants**
 
@@ -183,7 +164,7 @@ Add a new participant to a specific Secret Santa list.
 
 ```bash
 curl -X 'POST' \
-  'http://127.0.0.1:8000/v1/lists/1/participants' \
+  'http://127.0.0.1:8000/v1/lists/1/participants/' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{"name":"John Doe"}'
@@ -215,7 +196,7 @@ Retrieve all participants for a specific Secret Santa list.
 
 ```bash
 curl -X 'GET' \
-  'http://127.0.0.1:8000/v1/lists/1/participants' \
+  'http://127.0.0.1:8000/v1/lists/1/participants/' \
   -H 'accept: application/json'
 ```
 
@@ -244,7 +225,7 @@ Generate a Secret Santa draw for a specific list.
 
 ```bash
 curl -X 'GET' \
-  'http://127.0.0.1:8000/v1/lists/1/draw' \
+  'http://127.0.0.1:8000/v1/lists/1/draw/' \
   -H 'accept: application/json'
 ```
 

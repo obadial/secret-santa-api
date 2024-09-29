@@ -22,18 +22,12 @@ def reset_mock_session():
 
 
 def test_create_list(reset_mock_session):
-    mock_list = MagicMock(spec=SecretSantaList)
-    mock_list.id = 1
-    mock_list.name = "Holiday 2024"
+    mock_list = SecretSantaList(name="Holiday 2024")
 
-    mock_session.add.return_value = None
+    mock_session.add.side_effect = lambda obj: setattr(
+        obj, "id", 1
+    )  # Simuler l'assignation de l'ID
     mock_session.commit.return_value = None
-
-    def mock_refresh(x):
-        x.id = 1
-        return x
-
-    mock_session.refresh.side_effect = mock_refresh
 
     response = client.post("/v1/lists", params={"name": "Holiday 2024"})
 
@@ -42,19 +36,14 @@ def test_create_list(reset_mock_session):
 
     assert response.status_code == 200
     assert response.json()["name"] == "Holiday 2024"
+    assert response.json()["id"] == 1
     mock_session.add.assert_called_once()
     mock_session.commit.assert_called_once()
 
 
 def test_delete_list(reset_mock_session):
-    mock_list = MagicMock(spec=SecretSantaList)
-    mock_list.id = 1
-    mock_list.name = "Holiday 2024"
-
-    mock_participant = MagicMock(spec=Participant)
-    mock_participant.id = 1
-    mock_participant.name = "User 1"
-    mock_participant.list_id = 1
+    mock_list = SecretSantaList(id=1, name="Holiday 2024")
+    mock_participant = Participant(id=1, name="User 1", list_id=1)
 
     mock_session.get.return_value = mock_list
 
@@ -82,27 +71,23 @@ def test_delete_list(reset_mock_session):
         response.json()["message"]
         == "List with id: 1 and all associated participants have been removed"
     )
-    # Check that delete has been called twice
     assert mock_session.delete.call_count == 2
     mock_session.commit.assert_called_once()
 
 
 def test_list_with_participants(reset_mock_session):
-    mock_list = MagicMock(spec=SecretSantaList)
-    mock_list.id = 1
-    mock_list.name = "Holiday 2024"
-
+    mock_list = SecretSantaList(id=1, name="Holiday 2024")
     mock_participants = [
-        MagicMock(spec=Participant, id=1, name="User 1", list_id=1),
-        MagicMock(spec=Participant, id=2, name="User 2", list_id=1),
+        Participant(id=1, name="User 1", list_id=1),
+        Participant(id=2, name="User 2", list_id=1),
     ]
 
     def mock_exec_side_effect(query):
-        if "SELECT secretsantalist" in str(query).lower():
+        if "select secretsantalist" in str(query).lower():
             mock_exec_result = MagicMock()
             mock_exec_result.all.return_value = [mock_list]
             return mock_exec_result
-        elif "SELECT participant" in str(query).lower():
+        elif "select participant" in str(query).lower():
             mock_exec_result = MagicMock()
             mock_exec_result.all.return_value = mock_participants
             return mock_exec_result

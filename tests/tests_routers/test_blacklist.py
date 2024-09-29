@@ -21,24 +21,38 @@ def reset_mock_session():
     yield
 
 
+import pytest
+from fastapi.testclient import TestClient
+from unittest.mock import MagicMock, patch
+from sqlmodel import Session, select
+from app.main import app
+from app.utils.list_utils import get_session
+from app.models import Participant, SecretSantaList
+import warnings
+
+warnings.filterwarnings("ignore", category=DeprecationWarning)
+
+mock_session = MagicMock(spec=Session)
+app.dependency_overrides[get_session] = lambda: mock_session
+
+client = TestClient(app)
+
+
+@pytest.fixture
+def reset_mock_session():
+    mock_session.reset_mock()
+    yield
+
+
 def test_add_to_blacklist(reset_mock_session):
-    mock_participant = MagicMock(spec=Participant)
-    mock_participant.id = 1
-    mock_participant.name = "User 1"
-    mock_participant.list_id = 1
+    mock_participant = Participant(id=1, name="User 1", list_id=1)
+    mock_blacklisted_participant = Participant(id=2, name="User 2", list_id=1)
+    mock_default_list = SecretSantaList(id=1, name="Default Secret Santa List")
 
-    mock_blacklisted_participant = MagicMock(spec=Participant)
-    mock_blacklisted_participant.id = 2
-    mock_blacklisted_participant.name = "User 2"
-    mock_blacklisted_participant.list_id = 1
+    with patch("app.routers.blacklist.get_default_list", return_value=mock_default_list):
 
-    mock_default_list = MagicMock(spec=SecretSantaList)
-    mock_default_list.id = 1
-    mock_default_list.name = "Default List"
-
-    with patch("app.utils.list_utils.get_default_list", return_value=mock_default_list):
-
-        def mock_get(model, id):
+        def mock_get(model, *args, **kwargs):
+            id = kwargs.get("id", args[1] if len(args) > 1 else None)
             if model == Participant and id == 1:
                 return mock_participant
             elif model == Participant and id == 2:

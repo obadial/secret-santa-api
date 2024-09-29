@@ -5,7 +5,7 @@ from app.utils.list_utils import get_session
 from typing import List, Optional
 import random
 import uuid
-from config import STAR_WARS_PLANETS
+from app.config import STAR_WARS_PLANETS
 
 router = APIRouter(prefix="/lists", tags=["Lists"])
 

@@ -31,7 +31,6 @@ class Blacklist(SQLModel, table=True):
     list_id: Optional[int] = Field(default=None, foreign_key="secret_santa_list.id")
 
 
-# Définissez les relations après toutes les classes
 SecretSantaList.participants = Relationship(
     back_populates="list",
     sa_relationship_kwargs={

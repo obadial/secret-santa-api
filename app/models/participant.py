@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Relationship
+from sqlalchemy.orm import relationship
 from sqlmodel import SQLModel, Field
 from typing import Optional
 from pydantic import validator
@@ -9,7 +9,7 @@ class Participant(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str
     list_id: Optional[int] = Field(default=None, foreign_key="secretsantalist.id")
-    list: Optional[SecretSantaList] = Relationship(back_populates="participants")
+    list: Optional[SecretSantaList] = relationship(back_populates="participants")
 
     @validator("name")
     def name_must_not_be_empty(cls, value):

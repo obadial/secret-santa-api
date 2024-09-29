@@ -16,14 +16,21 @@ def session_fixture():
 
 
 def test_create_participant(session: Session):
-    santa_list = SecretSantaList(name="Test List")
-    session.add(santa_list)
-    session.commit()
-
-    participant = Participant(name="John Doe", list_id=santa_list.id)
+    participant = Participant(name="John Doe")
     session.add(participant)
     session.commit()
 
     assert participant.id is not None
     assert participant.name == "John Doe"
-    assert participant.list_id == santa_list.id
+
+
+def test_delete_participant(session: Session):
+    participant = Participant(name="Jane Doe")
+    session.add(participant)
+    session.commit()
+
+    session.delete(participant)
+    session.commit()
+
+    deleted_participant = session.get(Participant, participant.id)
+    assert deleted_participant is None

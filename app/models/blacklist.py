@@ -4,17 +4,14 @@ from sqlmodel import SQLModel, Field, Relationship
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import Optional
     from app.models.secretsantalist import SecretSantaList
 
 
 class Blacklist(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
-    participant_id: Optional[int] = Field(default=None, foreign_key="participant.id")
-    blacklisted_participant_id: Optional[int] = Field(
-        default=None, foreign_key="participant.id"
-    )
-    list_id: Optional[int] = Field(default=None, foreign_key="secretsantalist.id")
+    id: int = Field(default=None, primary_key=True)
+    participant_id: int = Field(default=None, foreign_key="participant.id")
+    blacklisted_participant_id: int = Field(default=None, foreign_key="participant.id")
+    list_id: int = Field(default=None, foreign_key="secretsantalist.id")
     list: SecretSantaList = Relationship(back_populates="blacklists")
 
     @validator("participant_id", "blacklisted_participant_id")

@@ -4,14 +4,13 @@ from sqlmodel import SQLModel, Field, Relationship
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from typing import List, Optional
     from app.models.secretsantalist import SecretSantaList
 
 
 class Participant(SQLModel, table=True):
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: int = Field(default=None, primary_key=True)
     name: str
-    list_id: Optional[int] = Field(default=None, foreign_key="secretsantalist.id")
+    list_id: int = Field(default=None, foreign_key="secretsantalist.id")
     list: SecretSantaList = Relationship(back_populates="participants")
 
     @validator("name", allow_reuse=True)

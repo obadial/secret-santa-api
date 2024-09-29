@@ -14,7 +14,7 @@ class Participant(SQLModel, table=True):
     list_id: Optional[int] = Field(default=None, foreign_key="secretsantalist.id")
     list: SecretSantaList = Relationship(back_populates="participants")
 
-    @validator("name")
+    @validator("name", allow_reuse=True)
     def name_must_not_be_empty(cls, value):
         if not value or value.strip() == "":
             raise ValueError("Name must not be empty")

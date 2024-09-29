@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
-from app.models.participant import Participant
-from app.models.blacklist import Blacklist
+from app.models import Blacklist, Participant
 from app.utils.list_utils import get_session, get_default_list
 from typing import List
 import random

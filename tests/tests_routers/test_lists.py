@@ -4,8 +4,7 @@ from unittest.mock import MagicMock
 from app.main import app
 from app.utils.list_utils import get_session
 from sqlmodel import Session
-from app.models.participant import Participant
-from app.models.secretsantalist import SecretSantaList
+from app.models import SecretSantaList, Participant
 
 mock_session = MagicMock(spec=Session)
 app.dependency_overrides[get_session] = lambda: mock_session

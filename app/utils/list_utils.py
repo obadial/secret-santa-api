@@ -1,5 +1,5 @@
 from sqlmodel import Session, select
-from app.models.secretsantalist import SecretSantaList
+from app.models import SecretSantaList
 from app.db import engine
 
 DEFAULT_LIST_NAME = "Default Secret Santa List"

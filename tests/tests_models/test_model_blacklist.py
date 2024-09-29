@@ -1,8 +1,6 @@
 import pytest
 from sqlmodel import Session, SQLModel, create_engine
-from app.models.blacklist import Blacklist
-from app.models.participant import Participant
-from app.models.secretsantalist import SecretSantaList
+from app.models import SecretSantaList, Participant, Blacklist
 
 DATABASE_URL = "sqlite:///:memory:"
 engine = create_engine(DATABASE_URL, echo=True)

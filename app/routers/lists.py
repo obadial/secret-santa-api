@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlmodel import Session, select
-from app.models.secretsantalist import SecretSantaList
-from app.models.participant import Participant
+from app.models import Participant, SecretSantaList
 from app.utils.list_utils import get_session
 from typing import List, Optional
 import random

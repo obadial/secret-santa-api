@@ -1,6 +1,6 @@
 import pytest
 from sqlmodel import Session, SQLModel, create_engine
-from app.models.participant import Participant
+from app.models import Participant
 
 DATABASE_URL = "sqlite:///:memory:"
 engine = create_engine(DATABASE_URL, echo=True)

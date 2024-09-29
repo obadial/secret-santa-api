@@ -15,8 +15,7 @@ import os
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    if "sqlite" in DATABASE_URL and not os.path.exists("./data/database.db"):
-        create_db_and_tables()
+    create_db_and_tables()
     yield
 
 

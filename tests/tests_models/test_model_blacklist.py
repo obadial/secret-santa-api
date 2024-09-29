@@ -16,7 +16,6 @@ def session_fixture():
 
 
 def test_create_blacklist(session: Session):
-    # Création de deux participants
     participant1 = Participant(name="Alice")
     participant2 = Participant(name="Bob")
     session.add(participant1)

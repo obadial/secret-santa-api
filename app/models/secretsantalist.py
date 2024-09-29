@@ -1,9 +1,8 @@
 from __future__ import annotations
 from sqlmodel import SQLModel, Field, Relationship
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, List
 
 if TYPE_CHECKING:
-    from typing import List
     from app.models.participant import Participant
     from app.models.blacklist import Blacklist
 

@@ -15,10 +15,7 @@ def get_session():
 
 def get_default_list(session: Session) -> SecretSantaList:
     """
-    This function retrieves or creates the default Secret Santa list if it doesn't exist.
-
-    :param session: The database session to use for the query
-    :return: The default Secret Santa list
+    This function retrieves or creates the default Secret Santa list if it doesnt exist.
     """
     # Try to find the default list
     default_list = session.exec(

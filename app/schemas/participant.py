@@ -5,7 +5,7 @@ class ParticipantCreate(BaseModel):
     name: str
 
     @validator("name")
-    def name_must_not_be_empty(cls, value):
+    def name_not_be_empty(cls, value):
         if not value or value.strip() == "":
             raise ValueError("Name must not be empty")
         if len(value) > 50:

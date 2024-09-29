@@ -30,7 +30,7 @@ def test_secret_santa_draw(reset_mock_session):
     ]
     mock_blacklists = []
 
-    with patch("app.routers.draw.get_default_list", return_value=mock_default_list):
+    with patch("app.utils.list_utils.get_default_list", return_value=mock_default_list):
         mock_session.exec.side_effect = [
             MagicMock(all=MagicMock(return_value=mock_participants)),
             MagicMock(all=MagicMock(return_value=mock_blacklists)),

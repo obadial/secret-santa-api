@@ -42,9 +42,7 @@ def test_get_participants(reset_mock_session):
         Participant(id=2, name="User 2", list_id=1),
     ]
 
-    with patch(
-        "app.routers.participants.get_default_list", return_value=mock_default_list
-    ):
+    with patch("app.utils.list_utils.get_default_list", return_value=mock_default_list):
         mock_exec_result = MagicMock()
         mock_exec_result.all.return_value = mock_participants
         mock_session.exec.return_value = mock_exec_result
@@ -60,9 +58,7 @@ def test_delete_participant(reset_mock_session):
     mock_default_list = SecretSantaList(id=1, name="Default List")
     mock_participant = Participant(id=1, name="User 1", list_id=1)
 
-    with patch(
-        "app.routers.participants.get_default_list", return_value=mock_default_list
-    ):
+    with patch("app.utils.list_utils.get_default_list", return_value=mock_default_list):
         mock_session.get.return_value = mock_participant
         mock_session.delete.return_value = None
         mock_session.commit.return_value = None

@@ -3,7 +3,7 @@ from fastapi.testclient import TestClient
 from unittest.mock import MagicMock
 from app.main import app
 from app.utils.list_utils import get_session
-from sqlmodel import Session
+from sqlmodel import Session, select
 from app.models import SecretSantaList, Participant
 import warnings
 

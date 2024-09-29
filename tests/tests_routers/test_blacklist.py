@@ -26,10 +26,22 @@ def test_add_to_blacklist(reset_mock_session):
     mock_blacklisted_participant = Participant(id=2, name="User 2", list_id=1)
     mock_default_list = SecretSantaList(id=1, name="Default List")
 
-    with patch("app.routers.blacklists.get_default_list", return_value=mock_default_list):
-        mock_session.get.side_effect = lambda model, id: (
-            mock_participant if id == 1 else mock_blacklisted_participant
-        )
+    with patch("app.utils.list_utils.get_default_list", return_value=mock_default_list):
+
+        def mock_get(model, id):
+            if model == Participant and id == 1:
+                return mock_participant
+            elif model == Participant and id == 2:
+                return mock_blacklisted_participant
+            else:
+                return None
+
+        mock_session.get.side_effect = mock_get
+
+        mock_exec_result = MagicMock()
+        mock_exec_result.first.return_value = mock_default_list
+        mock_session.exec.return_value = mock_exec_result
+
         mock_session.add.return_value = None
         mock_session.commit.return_value = None
 

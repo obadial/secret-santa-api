@@ -3,7 +3,7 @@ from fastapi.testclient import TestClient
 from unittest.mock import MagicMock
 from app.main import app, get_session
 from sqlalchemy.orm import Session
-from app.models import Participant, Blacklist
+from app.models.participant import Participant
 
 
 client = TestClient(app)

@@ -12,7 +12,7 @@ client = TestClient(app)
 @pytest.fixture
 def mock_session(mocker):
     mock_session = MagicMock(spec=Session)
-    mocker.patch("app.get_session", return_value=mock_session)
+    mocker.patch("app.main.get_session", return_value=mock_session)
     return mock_session
 
 

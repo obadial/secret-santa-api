@@ -55,8 +55,14 @@ def test_get_participants(reset_mock_session):
 
 
 def test_delete_participant(reset_mock_session):
-    mock_default_list = SecretSantaList(id=1, name="Default List")
-    mock_participant = Participant(id=1, name="User 1", list_id=1)
+    mock_default_list = MagicMock(spec=SecretSantaList)
+    mock_default_list.id = 1
+    mock_default_list.name = "Default List"
+
+    mock_participant = MagicMock(spec=Participant)
+    mock_participant.id = 1
+    mock_participant.name = "User 1"
+    mock_participant.list_id = 1
 
     with patch("app.utils.list_utils.get_default_list", return_value=mock_default_list):
         mock_session.get.return_value = mock_participant

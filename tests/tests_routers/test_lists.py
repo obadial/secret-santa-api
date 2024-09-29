@@ -22,7 +22,9 @@ def reset_mock_session():
 
 
 def test_create_list(reset_mock_session):
-    mock_list = SecretSantaList(id=1, name="Holiday 2024")
+    mock_list = MagicMock(spec=SecretSantaList)
+    mock_list.id = 1
+    mock_list.name = "Holiday 2024"
 
     mock_session.add.return_value = None
     mock_session.commit.return_value = None
@@ -45,8 +47,14 @@ def test_create_list(reset_mock_session):
 
 
 def test_delete_list(reset_mock_session):
-    mock_list = SecretSantaList(id=1, name="Holiday 2024")
-    mock_participant = Participant(id=1, name="User 1", list_id=1)
+    mock_list = MagicMock(spec=SecretSantaList)
+    mock_list.id = 1
+    mock_list.name = "Holiday 2024"
+
+    mock_participant = MagicMock(spec=Participant)
+    mock_participant.id = 1
+    mock_participant.name = "User 1"
+    mock_participant.list_id = 1
 
     mock_session.get.return_value = mock_list
 
@@ -74,23 +82,27 @@ def test_delete_list(reset_mock_session):
         response.json()["message"]
         == "List with id: 1 and all associated participants have been removed"
     )
+    # Check that delete has been called twice
     assert mock_session.delete.call_count == 2
     mock_session.commit.assert_called_once()
 
 
 def test_list_with_participants(reset_mock_session):
-    mock_list = SecretSantaList(id=1, name="Holiday 2024")
+    mock_list = MagicMock(spec=SecretSantaList)
+    mock_list.id = 1
+    mock_list.name = "Holiday 2024"
+
     mock_participants = [
-        Participant(id=1, name="User 1", list_id=1),
-        Participant(id=2, name="User 2", list_id=1),
+        MagicMock(spec=Participant, id=1, name="User 1", list_id=1),
+        MagicMock(spec=Participant, id=2, name="User 2", list_id=1),
     ]
 
     def mock_exec_side_effect(query):
-        if "SecretSantaList" in str(query):
+        if "SELECT secretsantalist" in str(query).lower():
             mock_exec_result = MagicMock()
             mock_exec_result.all.return_value = [mock_list]
             return mock_exec_result
-        elif "Participant" in str(query):
+        elif "SELECT participant" in str(query).lower():
             mock_exec_result = MagicMock()
             mock_exec_result.all.return_value = mock_participants
             return mock_exec_result

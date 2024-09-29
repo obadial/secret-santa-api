@@ -22,11 +22,14 @@ def reset_mock_session():
 
 
 def test_secret_santa_draw(reset_mock_session):
-    mock_default_list = SecretSantaList(id=1, name="Default List")
+    mock_default_list = MagicMock(spec=SecretSantaList)
+    mock_default_list.id = 1
+    mock_default_list.name = "Default List"
+
     mock_participants = [
-        Participant(id=1, name="User 1", list_id=1),
-        Participant(id=2, name="User 2", list_id=1),
-        Participant(id=3, name="User 3", list_id=1),
+        MagicMock(spec=Participant, id=1, name="User 1", list_id=1),
+        MagicMock(spec=Participant, id=2, name="User 2", list_id=1),
+        MagicMock(spec=Participant, id=3, name="User 3", list_id=1),
     ]
     mock_blacklists = []
 
@@ -48,9 +51,10 @@ def test_secret_santa_draw(reset_mock_session):
 
         mock_session.exec.side_effect = mock_exec_side_effect
 
-        mock_session.get.side_effect = lambda model, id: next(
-            (p for p in mock_participants if p.id == id), None
-        )
+        def mock_get(model, id):
+            return next((p for p in mock_participants if p.id == id), None)
+
+        mock_session.get.side_effect = mock_get
 
         response = client.get("/v1/draw")
 

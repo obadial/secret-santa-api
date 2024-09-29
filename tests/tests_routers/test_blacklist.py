@@ -22,9 +22,19 @@ def reset_mock_session():
 
 
 def test_add_to_blacklist(reset_mock_session):
-    mock_participant = Participant(id=1, name="User 1", list_id=1)
-    mock_blacklisted_participant = Participant(id=2, name="User 2", list_id=1)
-    mock_default_list = SecretSantaList(id=1, name="Default List")
+    mock_participant = MagicMock(spec=Participant)
+    mock_participant.id = 1
+    mock_participant.name = "User 1"
+    mock_participant.list_id = 1
+
+    mock_blacklisted_participant = MagicMock(spec=Participant)
+    mock_blacklisted_participant.id = 2
+    mock_blacklisted_participant.name = "User 2"
+    mock_blacklisted_participant.list_id = 1
+
+    mock_default_list = MagicMock(spec=SecretSantaList)
+    mock_default_list.id = 1
+    mock_default_list.name = "Default List"
 
     with patch("app.utils.list_utils.get_default_list", return_value=mock_default_list):
 

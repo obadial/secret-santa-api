@@ -1,6 +1,9 @@
-from __future__ import annotations
 from sqlmodel import SQLModel, Field, Relationship
-from typing import List, Optional
+from typing import Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from typing import List
+    from app.models import Participant, Blacklist, SecretSantaList
 
 
 class SecretSantaList(SQLModel, table=True):
@@ -9,9 +12,6 @@ class SecretSantaList(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str
 
-    participants: List["Participant"] = Relationship(back_populates="list")
-    blacklists: List["Blacklist"] = Relationship(back_populates="list")
-
 
 class Participant(SQLModel, table=True):
     __tablename__ = "participant"
@@ -19,16 +19,6 @@ class Participant(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str
     list_id: Optional[int] = Field(default=None, foreign_key="secret_santa_list.id")
-
-    list: "SecretSantaList" = Relationship(back_populates="participants")
-    blacklists: List["Blacklist"] = Relationship(
-        back_populates="participant",
-        sa_relationship_kwargs={"foreign_keys": "[Blacklist.participant_id]"},
-    )
-    blacklisted_by: List["Blacklist"] = Relationship(
-        back_populates="blacklisted_participant",
-        sa_relationship_kwargs={"foreign_keys": "[Blacklist.blacklisted_participant_id]"},
-    )
 
 
 class Blacklist(SQLModel, table=True):
@@ -41,12 +31,64 @@ class Blacklist(SQLModel, table=True):
     )
     list_id: Optional[int] = Field(default=None, foreign_key="secret_santa_list.id")
 
-    participant: "Participant" = Relationship(
-        back_populates="blacklists",
-        sa_relationship_kwargs={"foreign_keys": "[Blacklist.participant_id]"},
-    )
-    blacklisted_participant: "Participant" = Relationship(
-        back_populates="blacklisted_by",
-        sa_relationship_kwargs={"foreign_keys": "[Blacklist.blacklisted_participant_id]"},
-    )
-    list: "SecretSantaList" = Relationship(back_populates="blacklists")
+
+SecretSantaList.participants = Relationship(
+    sa_relationship_kwargs={
+        "back_populates": "list",
+        "cascade": "all, delete-orphan",
+    },
+    back_populates="list",
+    default_factory=list,
+)
+SecretSantaList.blacklists = Relationship(
+    sa_relationship_kwargs={
+        "back_populates": "list",
+        "cascade": "all, delete-orphan",
+    },
+    back_populates="list",
+    default_factory=list,
+)
+
+Participant.list = Relationship(
+    sa_relationship_kwargs={
+        "back_populates": "participants",
+    },
+    back_populates="participants",
+)
+Participant.blacklists = Relationship(
+    sa_relationship_kwargs={
+        "back_populates": "participant",
+        "foreign_keys": "[Blacklist.participant_id]",
+    },
+    back_populates="participant",
+    default_factory=list,
+)
+Participant.blacklisted_by = Relationship(
+    sa_relationship_kwargs={
+        "back_populates": "blacklisted_participant",
+        "foreign_keys": "[Blacklist.blacklisted_participant_id]",
+    },
+    back_populates="blacklisted_participant",
+    default_factory=list,
+)
+
+Blacklist.participant = Relationship(
+    sa_relationship_kwargs={
+        "back_populates": "blacklists",
+        "foreign_keys": "[Blacklist.participant_id]",
+    },
+    back_populates="blacklists",
+)
+Blacklist.blacklisted_participant = Relationship(
+    sa_relationship_kwargs={
+        "back_populates": "blacklisted_by",
+        "foreign_keys": "[Blacklist.blacklisted_participant_id]",
+    },
+    back_populates="blacklisted_by",
+)
+Blacklist.list = Relationship(
+    sa_relationship_kwargs={
+        "back_populates": "blacklists",
+    },
+    back_populates="blacklists",
+)

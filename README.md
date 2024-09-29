@@ -37,7 +37,7 @@ curl -X 'POST' \
   'http://127.0.0.1:8000/participants' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
-  -d '{"name":"Haroun Ben"}'
+  -d '{"name":"John Doe"}'
 ```
 
 #### Request Body:
@@ -182,3 +182,15 @@ This will run all the tests to ensure the API's functionality is working as expe
 - **GET `/participants`**: Get a list of all participants.
 - **POST `/blacklist`**: Add a participant to another participant's blacklist.
 - **GET `/draw`**: Generate a valid Secret Santa draw, respecting blacklists.
+
+## Important Resources
+
+Here are some helpful links and resources related to the project:
+
+[FastAPI Documentation](https://fastapi.tiangolo.com/)
+[SQLModel Documentation](https://sqlmodel.tiangolo.com/)
+[Poetry Documentation](https://python-poetry.org/docs/)
+[Uvicorn Documentation](https://www.uvicorn.org/)
+[Pytest Documentation](https://docs.pytest.org/en/stable/)
+
+

@@ -158,3 +158,6 @@ cython_debug/
 .venv
 **/__pycache__
 **/*.pyc
+
+# project
+data/*.db

@@ -14,7 +14,7 @@ class Blacklist(SQLModel, table=True):
         default=None, foreign_key="participant.id"
     )
     list_id: Optional[int] = Field(default=None, foreign_key="secretsantalist.id")
-    list: Optional[SecretSantaList] = Relationship(back_populates="blacklists")
+    list: SecretSantaList = Relationship(back_populates="blacklists")
 
     @validator("participant_id", "blacklisted_participant_id")
     def id_must_be_positive(cls, value):

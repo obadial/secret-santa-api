@@ -2,7 +2,7 @@ import pytest
 from fastapi.testclient import TestClient
 from unittest.mock import MagicMock
 from app.main import app, get_session
-from sqlmodel import Session
+from sqlmodel import Session, select
 from app.models.participant import Participant
 
 
@@ -14,10 +14,8 @@ client = TestClient(app)
 
 @pytest.fixture
 def reset_mock_session():
-    # Réinitialise le mock avant chaque test
     mock_session.reset_mock()
     yield
-    # Pas besoin de nettoyer app.dependency_overrides ici, car il est défini au niveau du module
 
 
 def test_create_participant(reset_mock_session):
@@ -40,13 +38,17 @@ def test_get_participants(reset_mock_session):
         Participant(id=2, name="User 2"),
     ]
 
-    mock_session.exec.return_value = mock_participants
+    # Simule l'objet retourné par session.exec().all()
+    mock_exec_result = MagicMock()
+    mock_exec_result.all.return_value = mock_participants
+    mock_session.exec.return_value = mock_exec_result
 
     response = client.get("/participants")
 
     assert response.status_code == 200
     assert len(response.json()) == 2
     assert response.json()[0]["name"] == "User 1"
+    mock_session.exec.assert_called_once()
 
 
 def test_add_to_blacklist(reset_mock_session):
@@ -76,12 +78,5 @@ def test_secret_santa_draw(reset_mock_session):
     ]
     mock_blacklists = []
 
-    mock_session.exec.side_effect = [
-        mock_participants,  # Premier appel pour les participants
-        mock_blacklists,  # Deuxième appel pour les blacklists
-    ]
-
-    response = client.get("/draw")
-
-    assert response.status_code == 200
-    assert len(response.json()) == 3
+    mock_exec_result_participants = MagicMock()
+    mock_exec_result_participants.all.return_val

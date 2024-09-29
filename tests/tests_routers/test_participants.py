@@ -5,13 +5,11 @@ from app.main import app
 from app.utils.list_utils import get_session
 from sqlmodel import Session
 from app.models import Participant
-from httpx import WSGITransport
 
 mock_session = MagicMock(spec=Session)
 app.dependency_overrides[get_session] = lambda: mock_session
 
-transport = WSGITransport(app=app)
-client = TestClient(transport=transport)
+client = TestClient(app)
 
 
 @pytest.fixture

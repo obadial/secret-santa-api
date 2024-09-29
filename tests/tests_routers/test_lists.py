@@ -28,7 +28,7 @@ def test_create_list(reset_mock_session):
     mock_session.commit.return_value = None
     mock_session.refresh.side_effect = lambda x: x
 
-    response = client.post("/v1/lists", json={"name": "Holiday 2024"})
+    response = client.post("/v1/lists", params={"name": "Holiday 2024"})
 
     assert response.status_code == 200
     assert response.json()["name"] == "Holiday 2024"
@@ -38,8 +38,12 @@ def test_create_list(reset_mock_session):
 
 def test_delete_list(reset_mock_session):
     mock_list = SecretSantaList(id=1, name="Holiday 2024")
+    mock_participant = Participant(id=1, name="User 1", list_id=1)
 
     mock_session.get.return_value = mock_list
+    mock_exec_result = MagicMock()
+    mock_exec_result.all.return_value = [mock_participant]
+    mock_session.exec.return_value = mock_exec_result
     mock_session.delete.return_value = None
     mock_session.commit.return_value = None
 
@@ -50,7 +54,7 @@ def test_delete_list(reset_mock_session):
         response.json()["message"]
         == "List with id: 1 and all associated participants have been removed"
     )
-    mock_session.delete.assert_called_once()
+    assert mock_session.delete.call_count == 2
     mock_session.commit.assert_called_once()
 
 
@@ -61,10 +65,21 @@ def test_list_with_participants(reset_mock_session):
         Participant(id=2, name="User 2", list_id=1),
     ]
 
-    mock_session.exec.side_effect = [
-        MagicMock(all=MagicMock(return_value=[mock_list])),
-        MagicMock(all=MagicMock(return_value=mock_participants)),
-    ]
+    def mock_exec_side_effect(query):
+        if str(query) == str(select(SecretSantaList)):
+            mock_exec_result = MagicMock()
+            mock_exec_result.all.return_value = [mock_list]
+            return mock_exec_result
+        elif str(query) == str(
+            select(Participant).where(Participant.list_id == mock_list.id)
+        ):
+            mock_exec_result = MagicMock()
+            mock_exec_result.all.return_value = mock_participants
+            return mock_exec_result
+        else:
+            return MagicMock()
+
+    mock_session.exec.side_effect = mock_exec_side_effect
 
     response = client.get("/v1/lists/with-participants")
 
@@ -72,4 +87,3 @@ def test_list_with_participants(reset_mock_session):
     assert len(response.json()) == 1
     assert len(response.json()[0]["participants"]) == 2
     assert response.json()[0]["participants"][0]["name"] == "User 1"
-    mock_session.exec.assert_called()

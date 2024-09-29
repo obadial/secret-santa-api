@@ -24,10 +24,9 @@ def reset_mock_session():
 def test_create_list(reset_mock_session):
     mock_list = SecretSantaList(name="Holiday 2024")
 
-    mock_session.add.side_effect = lambda obj: setattr(
-        obj, "id", 1
-    )  # Simuler l'assignation de l'ID
+    mock_session.add.return_value = None
     mock_session.commit.return_value = None
+    mock_session.refresh.side_effect = lambda x: setattr(x, "id", 1)
 
     response = client.post("/v1/lists", params={"name": "Holiday 2024"})
 
@@ -49,13 +48,9 @@ def test_delete_list(reset_mock_session):
 
     def mock_exec_side_effect(query):
         if "Participant" in str(query):
-            mock_exec_result = MagicMock()
-            mock_exec_result.all.return_value = [mock_participant]
-            return mock_exec_result
+            return [mock_participant]
         else:
-            mock_exec_result = MagicMock()
-            mock_exec_result.first.return_value = mock_list
-            return mock_exec_result
+            return [mock_list]
 
     mock_session.exec.side_effect = mock_exec_side_effect
     mock_session.delete.return_value = None

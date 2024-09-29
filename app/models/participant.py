@@ -1,9 +1,10 @@
 from __future__ import annotations
 from pydantic import validator
 from sqlmodel import SQLModel, Field, Relationship
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
+    from typing import List, Optional
     from app.models.secretsantalist import SecretSantaList
 
 

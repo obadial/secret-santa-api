@@ -4,7 +4,7 @@ This is a RESTful API built with FastAPI and SQLModel for managing participants 
 
 ## Setup
 
-### 1. Install dependencies
+### 1. Install Dependencies
 
 Make sure you have **Poetry** installed. Then, run the following command to install all dependencies:
 
@@ -12,7 +12,7 @@ Make sure you have **Poetry** installed. Then, run the following command to inst
 poetry install
 ```
 
-### 2. Run the application locally
+### 2. Run the Application Locally
 
 To start the FastAPI application, use the following command:
 
@@ -24,7 +24,7 @@ This will start the API on [http://127.0.0.1:8000](http://127.0.0.1:8000).
 
 ## API Endpoints
 
-### 1. POST /participants
+### 1. **POST /v1/participants**
 
 This endpoint allows you to create a new participant in the default Secret Santa list.
 
@@ -32,7 +32,7 @@ This endpoint allows you to create a new participant in the default Secret Santa
 
 ```bash
 curl -X 'POST' \
-  'http://127.0.0.1:8000/participants' \
+  'http://127.0.0.1:8000/v1/participants' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{"name":"John Doe"}'
@@ -55,7 +55,7 @@ curl -X 'POST' \
 }
 ```
 
-### 2. GET /participants
+### 2. **GET /v1/participants**
 
 This endpoint retrieves a list of all participants currently registered in the default Secret Santa list.
 
@@ -63,7 +63,7 @@ This endpoint retrieves a list of all participants currently registered in the d
 
 ```bash
 curl -X 'GET' \
-  'http://127.0.0.1:8000/participants' \
+  'http://127.0.0.1:8000/v1/participants' \
   -H 'accept: application/json'
 ```
 
@@ -82,7 +82,7 @@ curl -X 'GET' \
 ]
 ```
 
-### 3. POST /blacklist
+### 3. **POST /v1/blacklist**
 
 This endpoint allows one participant to blacklist another participant in the default list, preventing them from being paired together in the Secret Santa draw.
 
@@ -90,7 +90,7 @@ This endpoint allows one participant to blacklist another participant in the def
 
 ```bash
 curl -X 'POST' \
-  'http://127.0.0.1:8000/blacklist' \
+  'http://127.0.0.1:8000/v1/blacklist' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{"participant_id": 1, "blacklisted_participant_id": 2}'
@@ -115,7 +115,7 @@ curl -X 'POST' \
 }
 ```
 
-### 4. GET /draw
+### 4. **GET /v1/draw**
 
 This endpoint generates a valid Secret Santa draw for the default list, ensuring that no participants are paired with someone on their blacklist.
 
@@ -123,7 +123,7 @@ This endpoint generates a valid Secret Santa draw for the default list, ensuring
 
 ```bash
 curl -X 'GET' \
-  'http://127.0.0.1:8000/draw' \
+  'http://127.0.0.1:8000/v1/draw' \
   -H 'accept: application/json'
 ```
 
@@ -146,18 +146,24 @@ curl -X 'GET' \
 ]
 ```
 
-### 5. POST /lists
+### 5. **POST /v1/lists**
 
 Create a new Secret Santa list. If no name is provided, one will be generated automatically using a Star Wars planet name.
 
-**Example:**
+**Example without name:**
 
 ```bash
 curl -X 'POST' \
-  'http://127.0.0.1:8000/lists' \
-  -H 'accept: application/json' \
-  -H 'Content-Type: application/json' \
-  -d '{"name":"Holiday 2024"}'
+  'http://127.0.0.1:8000/v1/lists' \
+  -H 'accept: application/json'
+```
+
+**Example with a name provided:**
+
+```bash
+curl -X 'POST' \
+  'http://127.0.0.1:8000/v1/lists?name=Holiday%202024' \
+  -H 'accept: application/json'
 ```
 
 **Response:**
@@ -169,7 +175,7 @@ curl -X 'POST' \
 }
 ```
 
-### 6. POST /lists/{list_id}/participants
+### 6. **POST /v1/lists/{list_id}/participants**
 
 Add a new participant to a specific Secret Santa list.
 
@@ -177,10 +183,18 @@ Add a new participant to a specific Secret Santa list.
 
 ```bash
 curl -X 'POST' \
-  'http://127.0.0.1:8000/lists/1/participants' \
+  'http://127.0.0.1:8000/v1/lists/1/participants' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
   -d '{"name":"John Doe"}'
+```
+
+**Request Body:**
+
+```json
+{
+  "name": "John Doe"
+}
 ```
 
 **Response:**
@@ -193,7 +207,7 @@ curl -X 'POST' \
 }
 ```
 
-### 7. GET /lists/{list_id}/participants
+### 7. **GET /v1/lists/{list_id}/participants**
 
 Retrieve all participants for a specific Secret Santa list.
 
@@ -201,7 +215,7 @@ Retrieve all participants for a specific Secret Santa list.
 
 ```bash
 curl -X 'GET' \
-  'http://127.0.0.1:8000/lists/1/participants' \
+  'http://127.0.0.1:8000/v1/lists/1/participants' \
   -H 'accept: application/json'
 ```
 
@@ -222,7 +236,7 @@ curl -X 'GET' \
 ]
 ```
 
-### 8. GET /lists/{list_id}/draw
+### 8. **GET /v1/lists/{list_id}/draw**
 
 Generate a Secret Santa draw for a specific list.
 
@@ -230,7 +244,7 @@ Generate a Secret Santa draw for a specific list.
 
 ```bash
 curl -X 'GET' \
-  'http://127.0.0.1:8000/lists/1/draw' \
+  'http://127.0.0.1:8000/v1/lists/1/draw' \
   -H 'accept: application/json'
 ```
 
@@ -253,7 +267,7 @@ curl -X 'GET' \
 ]
 ```
 
-### 9. DELETE /participants/{participant_id}
+### 9. **DELETE /v1/participants/{participant_id}**
 
 Delete a participant from the default Secret Santa list.
 
@@ -261,7 +275,7 @@ Delete a participant from the default Secret Santa list.
 
 ```bash
 curl -X 'DELETE' \
-  'http://127.0.0.1:8000/participants/1' \
+  'http://127.0.0.1:8000/v1/participants/1' \
   -H 'accept: application/json'
 ```
 
@@ -273,7 +287,7 @@ curl -X 'DELETE' \
 }
 ```
 
-### 10. DELETE /lists/{list_id}/participants/{participant_id}
+### 10. **DELETE /v1/lists/{list_id}/participants/{participant_id}**
 
 Delete a participant from a specific Secret Santa list.
 
@@ -281,7 +295,7 @@ Delete a participant from a specific Secret Santa list.
 
 ```bash
 curl -X 'DELETE' \
-  'http://127.0.0.1:8000/lists/1/participants/1' \
+  'http://127.0.0.1:8000/v1/lists/1/participants/1' \
   -H 'accept: application/json'
 ```
 
@@ -293,7 +307,7 @@ curl -X 'DELETE' \
 }
 ```
 
-### 11. DELETE /lists/{list_id}
+### 11. **DELETE /v1/lists/{list_id}**
 
 Delete a specific Secret Santa list along with all its participants.
 
@@ -301,7 +315,7 @@ Delete a specific Secret Santa list along with all its participants.
 
 ```bash
 curl -X 'DELETE' \
-  'http://127.0.0.1:8000/lists/1' \
+  'http://127.0.0.1:8000/v1/lists/1' \
   -H 'accept: application/json'
 ```
 
@@ -313,7 +327,7 @@ curl -X 'DELETE' \
 }
 ```
 
-### 12. GET /lists/with-participants
+### 12. **GET /v1/lists/with-participants**
 
 Retrieve all Secret Santa lists with their participants.
 
@@ -321,7 +335,7 @@ Retrieve all Secret Santa lists with their participants.
 
 ```bash
 curl -X 'GET' \
-  'http://127.0.0.1:8000/lists/with-participants' \
+  'http://127.0.0.1:8000/v1/lists/with-participants' \
   -H 'accept: application/json'
 ```
 
@@ -372,25 +386,26 @@ This will run all the tests to ensure the API's functionality is working as expe
 
 ## Summary of Endpoints
 
-- **POST /participants**: Add a new participant.
-- **GET /participants**: Get a list of all participants.
-- **POST /blacklist**: Add a participant to another participant's blacklist.
-- **GET /draw**: Generate a valid Secret Santa draw, respecting blacklists.
-- **POST /lists**: Create a new Secret Santa list.
-- **POST /lists/{list_id}/participants**: Add a participant to a specific list.
-- **GET /lists/{list_id}/participants**: Retrieve all participants in a list.
-- **GET /lists/{list_id}/draw**: Generate a Secret Santa draw for a specific list.
-- **DELETE /participants/{participant_id}**: Delete a participant from the default list.
-- **DELETE /lists/{list_id}/participants/{participant_id}**: Delete a participant from a specific list.
-- **DELETE /lists/{list_id}**: Delete a specific list with all its participants.
-- **GET /lists/with-participants**: Get all lists with their participants.
+- **POST /v1/participants**: Add a new participant to the default list.
+- **GET /v1/participants**: Get a list of all participants in the default list.
+- **POST /v1/blacklist**: Add a participant to another participant's blacklist in the default list.
+- **GET /v1/draw**: Generate a valid Secret Santa draw for the default list, respecting blacklists.
+- **POST /v1/lists**: Create a new Secret Santa list.
+- **POST /v1/lists/{list_id}/participants**: Add a participant to a specific list.
+- **GET /v1/lists/{list_id}/participants**: Retrieve all participants in a list.
+- **GET /v1/lists/{list_id}/draw**: Generate a Secret Santa draw for a specific list.
+- **DELETE /v1/participants/{participant_id}**: Delete a participant from the default list.
+- **DELETE /v1/lists/{list_id}/participants/{participant_id}**: Delete a participant from a specific list.
+- **DELETE /v1/lists/{list_id}**: Delete a specific list with all its participants.
+- **GET /v1/lists/with-participants**: Get all lists with their participants.
 
 ## Important Resources
 
 Here are some helpful links and resources related to the project:
 
-- [FastAPI Documentation](https://fastapi.tiangolo.com/)
-- [SQLModel Documentation](https://sqlmodel.tiangolo.com/)
-- [Poetry Documentation](https://python-poetry.org/docs/)
-- [Uvicorn Documentation](https://www.uvicorn.org/)
-- [Pytest Documentation](https://docs.pytest.org/en/stable/)
+- [FastAPI](https://fastapi.tiangolo.com/)
+- [SQLModel](https://sqlmodel.tiangolo.com/)
+- [Poetry](https://python-poetry.org/docs/)
+- [Uvicorn](https://www.uvicorn.org/)
+- [Pytest](https://docs.pytest.org/en/stable/)
+

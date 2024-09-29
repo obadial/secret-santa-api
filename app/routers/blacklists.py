@@ -4,7 +4,7 @@ from app.schemas.blacklist import BlacklistCreate
 from app.models import Blacklist, Participant
 from app.utils.list_utils import get_default_list, get_session
 
-router = APIRouter(prefix="/v1/blacklist", tags=["Blacklist"])
+router = APIRouter(prefix="/blacklist", tags=["Blacklist"])
 
 
 @router.post("/")

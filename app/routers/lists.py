@@ -5,10 +5,9 @@ from app.utils.list_utils import get_session
 from typing import List, Optional
 import random
 import uuid
+from config import STAR_WARS_PLANETS
 
-router = APIRouter(prefix="/v1/lists", tags=["Lists"])
-
-STAR_WARS_PLANETS = ["Tatooine", "Hoth", "Endor", "Naboo", "Coruscant", "Dagobah"]
+router = APIRouter(prefix="/lists", tags=["Lists"])
 
 
 @router.post("/")

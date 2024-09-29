@@ -5,7 +5,7 @@ from app.utils.list_utils import get_session, get_default_list
 from typing import List
 import random
 
-router = APIRouter(prefix="/v1/draw", tags=["Draw"])
+router = APIRouter(prefix="/draw", tags=["Draw"])
 
 
 @router.get("/")

@@ -5,7 +5,7 @@ from app.models import Participant
 from app.utils.list_utils import get_default_list, get_session
 from typing import List
 
-router = APIRouter(prefix="/v1/participants", tags=["Participants"])
+router = APIRouter(prefix="/participants", tags=["Participants"])
 
 
 @router.post("/")

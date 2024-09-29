@@ -38,7 +38,6 @@ def test_get_participants(reset_mock_session):
         Participant(id=2, name="User 2"),
     ]
 
-    # Simule l'objet retourné par session.exec().all()
     mock_exec_result = MagicMock()
     mock_exec_result.all.return_value = mock_participants
     mock_session.exec.return_value = mock_exec_result

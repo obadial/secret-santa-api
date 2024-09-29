@@ -37,7 +37,7 @@ curl -X 'POST' \
   'http://127.0.0.1:8000/participants' \
   -H 'accept: application/json' \
   -H 'Content-Type: application/json' \
-  -d '{"name":"John Doe"}'
+  -d '{"name":"Haroun Ben"}'
 ```
 
 #### Request Body:
@@ -178,7 +178,6 @@ This will run all the tests to ensure the API's functionality is working as expe
 
 ## Summary of Endpoints
 
-- **GET `/ping`**: Check if the API is alive.
 - **POST `/participants`**: Add a new participant.
 - **GET `/participants`**: Get a list of all participants.
 - **POST `/blacklist`**: Add a participant to another participant's blacklist.

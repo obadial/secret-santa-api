@@ -1,6 +1,9 @@
 import pytest
 from sqlmodel import Session, SQLModel, create_engine
 from app.models import Participant
+import warnings
+
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 DATABASE_URL = "sqlite:///:memory:"
 engine = create_engine(DATABASE_URL, echo=True)

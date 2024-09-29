@@ -5,6 +5,9 @@ from app.main import app
 from app.utils.list_utils import get_session
 from sqlmodel import Session
 from app.models import SecretSantaList, Participant
+import warnings
+
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 mock_session = MagicMock(spec=Session)
 app.dependency_overrides[get_session] = lambda: mock_session

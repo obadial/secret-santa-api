@@ -19,6 +19,3 @@ api_v1.include_router(participants.router, prefix="/v1")
 api_v1.include_router(blacklists.router, prefix="/v1")
 api_v1.include_router(lists.router, prefix="/v1")
 api_v1.include_router(draw.router, prefix="/v1")
-
-
-app.mount("/v1", api_v1)

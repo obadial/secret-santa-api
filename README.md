@@ -164,6 +164,125 @@ In this example John Doe is giving a gift to Jane Smith. Jane Smith is giving a 
 
 ---
 
+### 5. `POST /lists`
+
+Create a new Secret Santa list. If no name is provided, one will be generated automatically using a Star Wars planet name.
+
+#### Example:
+
+```bash
+curl -X 'POST' \
+  'http://127.0.0.1:8000/lists' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"Holiday 2024"}'
+```
+
+#### Response:
+
+
+```json
+{
+  "id": 1,
+  "name": "Holiday 2024"
+}
+```
+
+
+```bash
+curl -X 'POST' \
+  'http://127.0.0.1:8000/lists' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{}'
+```
+
+
+#### Response:
+
+
+```json
+{
+  "id": 2,
+  "name": "Tatooine-123456"
+}
+```
+
+### 6. POST /lists/{list_id}/participants
+Add a new participant to a specific Secret Santa list.
+
+```bash
+curl -X 'POST' \
+  'http://127.0.0.1:8000/lists/1/participants' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -d '{"name":"John Doe"}'
+```
+
+#### Response:
+
+```json
+{
+  "id": 1,
+  "name": "John Doe",
+  "list_id": 1
+}
+```
+
+### 7. GET /lists/{list_id}/participants
+Retrieve all participants for a specific Secret Santa list.
+
+```bash
+curl -X 'GET' \
+  'http://127.0.0.1:8000/lists/1/participants' \
+  -H 'accept: application/json'
+```
+
+#### Response:
+
+```json
+[
+  {
+    "id": 1,
+    "name": "John Doe",
+    "list_id": 1
+  },
+  {
+    "id": 2,
+    "name": "Jane Smith",
+    "list_id": 1
+  }
+]
+```
+
+### 8. GET /lists/{list_id}/draw
+Generate a Secret Santa draw for a specific list.
+
+```bash
+curl -X 'GET' \
+  'http://127.0.0.1:8000/lists/1/draw' \
+  -H 'accept: application/json'
+```
+
+#### Response:
+
+```json
+[
+  {
+    "gifter_id": 1,
+    "gifter_name": "John Doe",
+    "receiver_id": 2,
+    "receiver_name": "Jane Smith"
+  },
+  {
+    "gifter_id": 2,
+    "gifter_name": "Jane Smith",
+    "receiver_id": 1,
+    "receiver_name": "John Doe"
+  }
+]
+```
+
 ## Running Tests
 
 To run all unit tests for the API, execute the following command:

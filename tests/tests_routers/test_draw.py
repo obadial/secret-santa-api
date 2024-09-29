@@ -31,12 +31,31 @@ def test_secret_santa_draw(reset_mock_session):
     mock_blacklists = []
 
     with patch("app.utils.list_utils.get_default_list", return_value=mock_default_list):
-        mock_session.exec.side_effect = [
-            MagicMock(all=MagicMock(return_value=mock_participants)),
-            MagicMock(all=MagicMock(return_value=mock_blacklists)),
-        ]
+
+        def mock_exec_side_effect(query):
+            if "Participant" in str(query):
+                mock_exec_result = MagicMock()
+                mock_exec_result.all.return_value = mock_participants
+                return mock_exec_result
+            elif "Blacklist" in str(query):
+                mock_exec_result = MagicMock()
+                mock_exec_result.all.return_value = mock_blacklists
+                return mock_exec_result
+            else:
+                mock_exec_result = MagicMock()
+                mock_exec_result.first.return_value = mock_default_list
+                return mock_exec_result
+
+        mock_session.exec.side_effect = mock_exec_side_effect
+
+        mock_session.get.side_effect = lambda model, id: next(
+            (p for p in mock_participants if p.id == id), None
+        )
 
         response = client.get("/v1/draw")
+
+        print(response.status_code)
+        print(response.json())
 
         assert response.status_code == 200
         assert len(response.json()) == 3

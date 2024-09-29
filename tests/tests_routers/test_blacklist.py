@@ -38,16 +38,15 @@ def test_add_to_blacklist(reset_mock_session):
 
         mock_session.get.side_effect = mock_get
 
-        mock_exec_result = MagicMock()
-        mock_exec_result.first.return_value = mock_default_list
-        mock_session.exec.return_value = mock_exec_result
-
         mock_session.add.return_value = None
         mock_session.commit.return_value = None
 
         response = client.post(
             "/v1/blacklist", json={"participant_id": 1, "blacklisted_participant_id": 2}
         )
+
+        print(response.status_code)
+        print(response.json())
 
         assert response.status_code == 200
         mock_session.add.assert_called_once()

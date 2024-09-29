@@ -65,6 +65,9 @@ def test_delete_participant(reset_mock_session):
 
         response = client.delete("/v1/participants/1")
 
+        print(response.status_code)
+        print(response.json())
+
         assert response.status_code == 200
         assert (
             response.json()["message"]

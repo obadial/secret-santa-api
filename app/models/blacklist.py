@@ -1,7 +1,7 @@
+from pydantic import validator
 from sqlmodel import SQLModel, Field
 from sqlalchemy.orm import relationship
 from typing import Optional
-from pydantic import validator
 from app.models.secretsantalist import SecretSantaList
 
 
@@ -12,7 +12,7 @@ class Blacklist(SQLModel, table=True):
         default=None, foreign_key="participant.id"
     )
     list_id: Optional[int] = Field(default=None, foreign_key="secretsantalist.id")
-    list: Optional["SecretSantaList"] = relationship(
+    list: Optional[SecretSantaList] = relationship(
         "SecretSantaList", back_populates="blacklists"
     )
 

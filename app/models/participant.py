@@ -1,7 +1,7 @@
-from sqlalchemy.orm import relationship
-from sqlmodel import SQLModel, Field
-from typing import Optional
 from pydantic import validator
+from sqlmodel import SQLModel, Field
+from sqlalchemy.orm import relationship
+from typing import Optional
 from app.models.secretsantalist import SecretSantaList
 
 
@@ -9,7 +9,7 @@ class Participant(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str
     list_id: Optional[int] = Field(default=None, foreign_key="secretsantalist.id")
-    list: Optional["SecretSantaList"] = relationship(
+    list: Optional[SecretSantaList] = relationship(
         "SecretSantaList", back_populates="participants"
     )
 
